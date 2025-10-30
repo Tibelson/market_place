@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from item.models import Item
 
 class User(AbstractUser):
     ROLE_CHOICES = (
@@ -25,19 +26,19 @@ class Vendor(models.Model):
     def __str__(self):
         return self.store_name
     
-class Product(models.Model):
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='products')
-    product_name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock_quantity = models.PositiveIntegerField()
-    product_image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+# class Product(models.Model):
+#     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='products')
+#     product_name = models.CharField(max_length=100)
+#     description = models.TextField()
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+#     stock_quantity = models.PositiveIntegerField()
+#     product_image = models.ImageField(upload_to='product_images/', blank=True, null=True)
 
-    def __str__(self):
-        return self.product_name
+#     def __str__(self):
+#         return self.product_name
     
 class Order(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Item, on_delete=models.CASCADE)
     customer_name = models.CharField(max_length=100)
     customer_email = models.EmailField()
     quantity = models.PositiveIntegerField()

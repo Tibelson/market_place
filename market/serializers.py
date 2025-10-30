@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     Vendor,
-    Product, 
+
     Order,
     Chat,
     Subscription,
@@ -12,10 +12,7 @@ class VendorSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id']
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'  
+
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
