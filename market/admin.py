@@ -7,7 +7,9 @@ from .models import (
     Order,
     Chat,
     Subscription,
+    User,
 )
+admin.site.register(User)
 admin.site.register(Vendor)
 admin.site.register(Product)
 admin.site.register(Order)

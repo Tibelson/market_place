@@ -1,7 +1,18 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+class User(AbstractUser):
+    ROLE_CHOICES = (
+        ('VENDORS','vendors'),
+        ('customer', 'CUSTOMER')
+    )
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
+    def __str__(self):
+        return self.name
+    
 
 class Vendor(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE)
