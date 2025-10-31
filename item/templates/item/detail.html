@@ -1,0 +1,35 @@
+{% extends 'market/base.html'%}
+
+{% block title %}{{ item.name }}{%endblock%}
+
+{% block content %}
+<div class="grid grid-cols-5 gap-6">
+    <div class="col-span-3">
+        <img src="{{item.image.url}}" class="rounded-xl">
+    </div> 
+    <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
+        <h1 class="mb-6 text-3xl font-bold mb-4">{{ item.name }}</h1>
+       
+        <p class="text-gray-500"><strong>Price:</strong>${{ item.price }}</p>
+        <p class="text-gray-500"><strong>Seller:</strong>
+            {% if item.owner.store_name %}
+                {{ item.owner.store_name }}
+            {% elif item.owner.user.get_full_name %}
+                {{ item.owner.user.get_full_name }}
+            {% else %}
+                {{ item.owner.user.username }}
+            {% endif %}
+        </p>
+        {% if item.description %}
+         <p class="text-gray-500"><strong>Description:</strong>{{ item.description }}</p>
+         {% endif %}
+    {% if item.owner.email %}
+    <a href="mailto:{{ item.owner.email }}" class="inline-block px-6 py-3 bg-teal-500 text-white rounded-lg hover:bg-teal-600">Contact Seller</a>
+    {% elif item.owner.user.email %}
+    <a href="mailto:{{ item.owner.user.email }}" class="inline-block px-6 py-3 bg-teal-500 text-white rounded-lg hover:bg-teal-600">Contact Seller</a>
+    {% else %}
+    <button class="px-6 py-3 bg-gray-400 text-white rounded-lg cursor-not-allowed" disabled>No contact available</button>
+    {% endif %}
+    </div>
+</div>
+{%endblock%}

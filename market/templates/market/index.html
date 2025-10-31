@@ -1,5 +1,80 @@
 {% extends 'market/base.html' %}
 
+{% load static %}
+
+{% block title %}Marketplace{% endblock %}
+
 {% block content %}
-<h1>The Front Page</h1>
+<div class="max-w-7xl mx-auto">
+	<!-- Hero / Search -->
+	<section class="mb-8">
+		<div class="bg-white rounded-lg shadow p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+			<div>
+				<h1 class="text-3xl font-bold">Campus Connect Market</h1>
+				<p class="text-gray-600 mt-1">Buy and sell items with your campus community.</p>
+			</div>
+
+			<form method="get" action="" class="mt-4 sm:mt-0 sm:flex sm:items-center">
+				<label for="q" class="sr-only">Search</label>
+				<input id="q" name="q" type="search" placeholder="Search items..." value="{{ request.GET.q|default_if_none:'' }}" class="w-full sm:w-80 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2" />
+				<button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-r-lg hover:bg-teal-600">Search</button>
+			</form>
+		</div>
+	</section>
+
+	<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+		<!-- Categories / Filters -->
+		<aside class="lg:col-span-1">
+			<div class="bg-white p-4 rounded-lg shadow">
+				<h3 class="font-semibold mb-3">Categories</h3>
+				<ul class="space-y-2">
+								<li>
+									<a href="/" class="text-sm text-gray-700 hover:text-teal-600">All</a>
+								</li>
+					{% for category in categories %}
+					<li>
+						<a href="?category={{ category.id }}" class="text-sm text-gray-700 hover:text-teal-600">{{ category.name }}</a>
+					</li>
+					{% empty %}
+					<li class="text-sm text-gray-500">No categories yet</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</aside>
+
+		<!-- Items grid -->
+		<main class="lg:col-span-3">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{% for item in items %}
+				<article class="bg-white rounded-lg shadow overflow-hidden">
+					<a href="{% url 'item:detail' item.pk %}" class="block">
+						<div class="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+							{% if item.image %}
+								<img src="{{ item.image.url }}" alt="{{ item.name }}" class="object-cover w-full h-full" />
+							{% else %}
+								<svg class="w-24 h-24 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v18H3V3z" />
+								</svg>
+							{% endif %}
+						</div>
+					</a>
+
+					<div class="p-4">
+						<h2 class="text-lg font-semibold text-gray-800 truncate">{{ item.name }}</h2>
+						<p class="text-sm text-gray-500 mt-1 truncate">{{ item.description|default_if_none:"No description" }}</p>
+
+						<div class="mt-4 flex items-center justify-between">
+							<div class="text-teal-600 font-bold">${{ item.price }}</div>
+							<a href="{% url 'item:detail' item.pk %}" class="text-sm text-gray-700 hover:text-teal-600">View</a>
+						</div>
+					</div>
+				</article>
+				{% empty %}
+				<div class="col-span-full bg-white p-6 rounded-lg shadow text-center text-gray-600">No items available right now.</div>
+				{% endfor %}
+			</div>
+		</main>
+	</div>
+</div>
+
 {% endblock %}
