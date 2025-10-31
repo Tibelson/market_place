@@ -1,0 +1,142 @@
+{% extends 'market/base.html' %}
+
+{% block title %}Sign up | Campus Connect{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-gradient-to-br from-white to-teal-50 rounded-2xl shadow-lg overflow-hidden">
+	<div class="grid grid-cols-1 md:grid-cols-2">
+		<!-- Left: Illustration / brand -->
+		<div class="p-8 bg-teal-700 text-white flex flex-col justify-center">
+			<div class="mb-6">
+				<h2 class="text-3xl font-extrabold">Join Campus Connect</h2>
+				<p class="mt-2 text-teal-100">A student-first marketplace to buy, sell and connect with your campus community.</p>
+			</div>
+			<div class="mt-4">
+				<svg class="w-40 h-40 opacity-80" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<rect width="120" height="120" rx="20" fill="#0f766e"/>
+					<path d="M30 70c8-12 24-12 32 0" stroke="#a7f3d0" stroke-width="4" stroke-linecap="round"/>
+					<circle cx="60" cy="44" r="12" fill="#a7f3d0"/>
+				</svg>
+			</div>
+			<p class="mt-6 text-sm text-teal-200">Create a free account — whether you're a student selling textbooks or a vendor running a campus store.</p>
+		</div>
+
+		<!-- Right: Form -->
+		<div class="p-8">
+			<form method="post" action="" id="signup-form" class="space-y-6">
+				{% csrf_token %}
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Username</label>
+						<input name="username" required class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="choose a username" />
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Full name</label>
+						<input name="name" required class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="Jane Doe" />
+					</div>
+				</div>
+
+				<div>
+					<label class="block text-sm font-medium text-gray-700">Email</label>
+					<input name="email" type="email" required class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="you@university.edu" />
+				</div>
+
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Password</label>
+						<input name="password1" type="password" minlength="8" required class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="At least 8 characters" />
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Confirm password</label>
+						<input name="password2" type="password" minlength="8" required class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="Repeat password" />
+					</div>
+				</div>
+
+				<fieldset class="border border-gray-200 rounded-lg p-4">
+					<legend class="text-sm font-medium text-gray-700 px-2">Role</legend>
+					<div class="flex items-center gap-6 mt-2">
+						<label class="inline-flex items-center">
+							<input type="radio" name="role" value="customer" checked class="form-radio text-teal-600" />
+							<span class="ml-2 text-sm">Student / Customer</span>
+						</label>
+						<label class="inline-flex items-center">
+							<input type="radio" name="role" value="vendor" class="form-radio text-teal-600" />
+							<span class="ml-2 text-sm">Vendor / Store</span>
+						</label>
+					</div>
+
+					<div id="vendor-fields" class="mt-4 hidden space-y-3">
+						<p class="text-sm text-gray-500">If you run a campus store, we need a few extra details.</p>
+						<div>
+							<label class="block text-sm font-medium text-gray-700">Store name</label>
+							<input name="store_name" class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="My Campus Store" />
+						</div>
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+							<div>
+								<label class="block text-sm font-medium text-gray-700">Phone</label>
+								<input name="phone" pattern="[0-9]{7,15}" class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="e.g. 5551234567" />
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700">Location</label>
+								<input name="location" class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="Campus building, room" />
+							</div>
+						</div>
+					</div>
+				</fieldset>
+
+				<div class="flex items-center justify-between">
+					<button type="submit" class="px-6 py-3 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700">Create account</button>
+					<a href="#" class="text-sm text-gray-600">Already have an account? Log in</a>
+				</div>
+
+				<p class="text-xs text-gray-500">By creating an account you agree to our <a href="#" class="text-teal-600">Terms</a> and <a href="#" class="text-teal-600">Privacy Policy</a>.</p>
+			</form>
+		</div>
+	</div>
+  
+</div>
+
+<script>
+// small client-side interactions: show vendor fields when vendor role selected, basic password match check
+document.addEventListener('DOMContentLoaded', function () {
+	const vendorFields = document.getElementById('vendor-fields');
+	const roleRadios = document.querySelectorAll('input[name="role"]');
+	const form = document.getElementById('signup-form');
+
+	function updateVendorVisibility() {
+		const role = document.querySelector('input[name="role"]:checked').value;
+		if (role === 'vendor') {
+			vendorFields.classList.remove('hidden');
+		} else {
+			vendorFields.classList.add('hidden');
+		}
+	}
+
+	roleRadios.forEach(r => r.addEventListener('change', updateVendorVisibility));
+	updateVendorVisibility();
+
+	form.addEventListener('submit', function (e) {
+		const p1 = form.querySelector('input[name=password1]').value;
+		const p2 = form.querySelector('input[name=password2]').value;
+		if (p1 !== p2) {
+			e.preventDefault();
+			alert('Passwords do not match. Please check and try again.');
+			return false;
+		}
+
+		// lightweight validation: if vendor, require store_name
+		const role = document.querySelector('input[name="role"]:checked').value;
+		if (role === 'vendor') {
+			const store = form.querySelector('input[name=store_name]').value.trim();
+			if (!store) {
+				e.preventDefault();
+				alert('Please provide a store name for vendor accounts.');
+				return false;
+			}
+		}
+	});
+});
+</script>
+
+{% endblock %}
+

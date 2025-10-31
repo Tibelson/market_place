@@ -6,6 +6,7 @@ from .serializers import (
 )
 from django.shortcuts import render
 from item.models import Item, Category
+from .forms import SignUpForm
 
 
 class VendorViewSet(viewsets.ModelViewSet):
@@ -30,3 +31,10 @@ def index(request):
     }
 
     return render(request, 'market/index.html', context)
+
+def signup(request):
+    form = SignUpForm()
+
+
+    context = {'form': form}
+    return render(request, 'market/signup.html', context)
