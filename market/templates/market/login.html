@@ -1,0 +1,94 @@
+{% extends 'market/base.html' %}
+{% load static %}
+
+{% block title %}Log in | Campus Connect{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
+	<!-- Left: Brand splash -->
+	<div class="hidden md:flex flex-col items-center justify-center p-8 bg-gradient-to-br from-teal-700 to-teal-600 text-white">
+		<h2 class="text-2xl font-extrabold">Welcome back</h2>
+		<p class="mt-2 text-teal-100 text-sm text-center">Sign in to continue browsing campus items, manage your listings, and message sellers.</p>
+		<div class="mt-6">
+			<svg class="w-36 h-36 opacity-90" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<rect width="120" height="120" rx="20" fill="#074n"/>
+				<path d="M30 74c10-14 30-14 40 0" stroke="#a7f3d0" stroke-width="4" stroke-linecap="round"/>
+				<circle cx="60" cy="44" r="12" fill="#a7f3d0"/>
+			</svg>
+		</div>
+	</div>
+
+	<!-- Right: Login form -->
+	<div class="p-8">
+		<div class="mb-6">
+			<a href="/" class="text-xl font-semibold">Campus Connect</a>
+			<h1 class="mt-4 text-2xl font-bold">Sign in to your account</h1>
+			<p class="mt-1 text-sm text-gray-500">Use your username or email to log in.</p>
+		</div>
+
+		<form method="post" action="" id="login-form" class="space-y-5">
+			{% csrf_token %}
+			<div>
+				<label class="block text-sm font-medium text-gray-700">Username or Email</label>
+				<input name="username" required class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="username or you@school.edu" />
+			</div>
+
+			<div>
+				<label class="block text-sm font-medium text-gray-700">Password</label>
+				<input name="password" type="password" required class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400" placeholder="Your password" />
+			</div>
+
+			<div class="flex items-center justify-between">
+				<label class="inline-flex items-center text-sm">
+					<input type="checkbox" name="remember" class="form-checkbox text-teal-600" />
+					<span class="ml-2">Remember me</span>
+				</label>
+
+				<a href="#" class="text-sm text-teal-600">Forgot password?</a>
+			</div>
+
+			<div class="flex items-center gap-4">
+				<button type="submit" class="px-6 py-3 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700">Sign in</button>
+				<a href="/signup/" class="text-sm text-gray-600">Create an account</a>
+			</div>
+
+			<div class="pt-4">
+				<div class="relative">
+					<div class="absolute inset-0 flex items-center">
+						<div class="w-full border-t border-gray-200"></div>
+					</div>
+					<div class="relative flex justify-center text-sm"> <span class="bg-white px-2 text-gray-500">or continue with</span> </div>
+				</div>
+
+				<div class="mt-4 flex gap-3">
+					<button type="button" class="flex-1 px-4 py-2 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50">
+						<img src="{% static 'market/icons/google-logo-svgrepo-com.svg' %}" alt="Google" class="w-5 h-5" />
+						<span class="text-sm">Google</span>
+					</button>
+					<button type="button" class="flex-1 px-4 py-2 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50">
+						<img src="{% static 'market/icons/apple-logo-svgrepo-com.svg' %}" alt="Apple" class="w-5 h-5" />
+						<span class="text-sm">Apple</span>
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+// gentle client-side check to ensure fields are filled (keeps UX fast) and show simple error UI
+document.addEventListener('DOMContentLoaded', function () {
+	const form = document.getElementById('login-form');
+	form.addEventListener('submit', function (e) {
+		const username = form.querySelector('input[name=username]').value.trim();
+		const password = form.querySelector('input[name=password]').value;
+		if (!username || !password) {
+			e.preventDefault();
+			alert('Please enter both username (or email) and password.');
+		}
+	});
+});
+</script>
+
+{% endblock %}
+

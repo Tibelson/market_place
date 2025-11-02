@@ -10,7 +10,6 @@ from .models import (
 )
 admin.site.register(User)
 admin.site.register(Vendor)
-# admin.site.register(Product)
 admin.site.register(Order)
 admin.site.register(Chat)
 admin.site.register(Subscription)   

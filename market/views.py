@@ -4,9 +4,9 @@ from .serializers import (
     VendorSerializer,       
     OrderSerializer,
 )
-from django.shortcuts import render
+from django.shortcuts import render, redirect 
 from item.models import Item, Category
-from .forms import SignUpForm
+from .forms import SignUpForm, AuthenticationForm
 
 
 class VendorViewSet(viewsets.ModelViewSet):
@@ -33,8 +33,20 @@ def index(request):
     return render(request, 'market/index.html', context)
 
 def signup(request):
-    form = SignUpForm()
-
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/login')
+    else:
+        form = SignUpForm()
 
     context = {'form': form}
     return render(request, 'market/signup.html', context)
+
+
+# def login(request):
+#     form = AuthenticationForm()
+
+#     context = {'form': form}
+#     return render(request, 'market/login.html', context)
