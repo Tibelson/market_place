@@ -25,7 +25,7 @@ from  market.views import index, signup
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('item/', include('item.urls')),
-    path('api/', include('market.urls')),
+    path('', include('market.urls')),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
