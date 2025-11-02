@@ -5,12 +5,21 @@
 {% block content %}
 <div class="grid grid-cols-5 gap-6">
     <div class="col-span-3">
-        <img src="{{item.image.url}}" class="rounded-xl">
-    </div> 
+        {% if item.image %}
+            <img src="{{ item.image.url }}" class="rounded-xl w-full object-cover" />
+        {% else %}
+            <div class="rounded-xl bg-gray-100 w-full h-96 flex flex-col items-center justify-center text-gray-400">
+                <svg class="w-16 h-16 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M7 7l5 5 5-5" />
+                </svg>
+                <span class="text-sm">No image available</span>
+            </div>
+        {% endif %}
+    </div>
     <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
         <h1 class="mb-6 text-3xl font-bold mb-4">{{ item.name }}</h1>
        
-        <p class="text-gray-500"><strong>Price:</strong>${{ item.price }}</p>
+        <p class="text-gray-500"><strong>Price:</strong>GHS:{{ item.price }}</p>
         <p class="text-gray-500"><strong>Seller:</strong>
             {% if item.owner.store_name %}
                 {{ item.owner.store_name }}

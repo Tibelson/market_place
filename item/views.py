@@ -19,6 +19,8 @@ def new_item(request):
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
             item = form.save(commit=False)
+            # set sold flag from form checkbox (checkbox sends value when checked)
+            item.is_sold = bool(request.POST.get('is_sold'))
             # ensure owner is a Vendor linked to the logged-in user
             try:
                 vendor = request.user.vendor
