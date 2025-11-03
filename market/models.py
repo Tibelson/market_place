@@ -4,8 +4,8 @@ from item.models import Item
 
 class User(AbstractUser):
     ROLE_CHOICES = (
-        ('VENDORS','vendors'),
-        ('customer', 'CUSTOMER')
+        ('VENDORS','VENDORS'),
+        ('CUSTOMER', 'Customer')
     )
     name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
@@ -49,15 +49,15 @@ class Order(models.Model):
         return f"Order #{self.id} - {self.product.product_name} for {self.customer_name}"
     
 
-class Chat(models.Model):
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    customer_name = models.CharField(max_length=100)
-    message = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    is_read = models.BooleanField(default=False)
+# class Chat(models.Model):
+#     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+#     customer_name = models.CharField(max_length=100)
+#     message = models.TextField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     is_read = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"Chat with {self.customer_name} at {self.timestamp}"
+#     def __str__(self):
+#         return f"Chat with {self.customer_name} at {self.timestamp}"
 
 class Subscription(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)

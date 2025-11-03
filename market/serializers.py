@@ -3,7 +3,6 @@ from .models import (
     Vendor,
 
     Order,
-    Chat,
     Subscription,
 )
 class VendorSerializer(serializers.ModelSerializer):
@@ -19,10 +18,10 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = '__all__'
 
-class ChatSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Chat
-        fields = '__all__'  
+# class ChatSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Chat
+#         fields = '__all__'  
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
