@@ -63,6 +63,24 @@ class Subscription(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     user  = models.ForeignKey('User', on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
+    # If muted is True, the subscriber will not receive new-item notifications
+    muted = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Subscription for {self.vendor.store_name} by {self.user.username}"
+
+
+class Notification(models.Model):
+    """Simple in-app notification for subscription events (e.g., new item added)."""
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notifications')
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True, blank=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True, blank=True)
+    message = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message[:40]}"

@@ -40,6 +40,22 @@ def new_item(request):
                 vendor = Vendor.objects.create(user=request.user, store_name=(getattr(request.user, 'name', '') or request.user.username), email=getattr(request.user, 'email', ''))
             item.owner = vendor
             item.save()
+            # Create in-app notifications for active, unmuted subscribers
+            try:
+                from market.models import Subscription, Notification
+                subs = Subscription.objects.filter(vendor=vendor, is_active=True, muted=False).select_related('user')
+                notifications = []
+                for s in subs:
+                    # avoid notifying the vendor themself
+                    if s.user == request.user:
+                        continue
+                    msg = f"{vendor.store_name} added a new item: {item.name}"
+                    notifications.append(Notification(user=s.user, vendor=vendor, item=item, message=msg))
+                if notifications:
+                    Notification.objects.bulk_create(notifications)
+            except Exception:
+                # If notifications can't be created (models not available), skip silently
+                pass
             return redirect('item:detail', pk=item.pk)
     else:
         form = ItemForm()

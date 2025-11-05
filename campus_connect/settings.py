@@ -77,6 +77,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # messaging unread count for navbar
                 'messaging.context_processors.unread_message_count',
+                # market notifications unread count
+                'market.context_processors.unread_notifications_count',
             ],
         },
     },

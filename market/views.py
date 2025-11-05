@@ -70,13 +70,21 @@ def signup(request):
 
 @login_required
 def subscribe_vendor(request, vendor_id):
-    """Subscribe the current user to a vendor. Creates Subscription if missing or re-activates it."""
+    """Subscribe the current user to a vendor. Only non-vendor users can subscribe.
+
+    Creates Subscription if missing or re-activates it. By default notifications are enabled
+    (muted=False)."""
     vendor = get_object_or_404(Vendor, pk=vendor_id)
+    # Disallow vendors from subscribing to other vendors (business rule)
+    if hasattr(request.user, 'vendor'):
+        return redirect(request.META.get('HTTP_REFERER') or 'market:index')
+
     sub, created = Subscription.objects.get_or_create(vendor=vendor, user=request.user)
     if not sub.is_active:
         sub.is_active = True
-        sub.save()
-    # redirect back to referring page or vendor/home
+    # When creating, ensure notifications are enabled by default
+    sub.muted = False
+    sub.save()
     return redirect(request.META.get('HTTP_REFERER') or 'market:index')
 
 
@@ -91,6 +99,30 @@ def unsubscribe_vendor(request, vendor_id):
     except Subscription.DoesNotExist:
         pass
     return redirect(request.META.get('HTTP_REFERER') or 'market:index')
+
+
+@login_required
+def toggle_mute_subscription(request, vendor_id):
+    """Toggle the muted flag on the current user's subscription to a vendor."""
+    vendor = get_object_or_404(Vendor, pk=vendor_id)
+    try:
+        sub = Subscription.objects.get(vendor=vendor, user=request.user)
+        sub.muted = not sub.muted
+        sub.save()
+    except Subscription.DoesNotExist:
+        # If no subscription exists, create one muted=False then flip to muted True
+        sub = Subscription.objects.create(vendor=vendor, user=request.user, is_active=True, muted=True)
+    return redirect(request.META.get('HTTP_REFERER') or 'market:index')
+
+
+def notifications_list(request):
+    """Show notifications for the current user. Marks notifications as read on view."""
+    if not request.user.is_authenticated:
+        return redirect('market:login')
+    notifications = request.user.notifications.all()
+    # mark unread as read
+    notifications.filter(is_read=False).update(is_read=True)
+    return render(request, 'market/notifications.html', {'notifications': notifications})
 
 
 def logout_view(request):
