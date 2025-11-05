@@ -25,6 +25,7 @@ from  market.views import index, signup
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('item/', include('item.urls')),
+    path('messages/', include('messaging.urls')),
     path('', include('market.urls')),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

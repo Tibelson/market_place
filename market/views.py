@@ -1,5 +1,7 @@
 from rest_framework import viewsets
-from .models import Vendor, Order
+from .models import Vendor, Order, Subscription
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .serializers import (
     VendorSerializer,       
     OrderSerializer,
@@ -63,6 +65,31 @@ def signup(request):
 
     context = {'form': form}
     return render(request, 'market/signup.html', context)
+
+
+@login_required
+def subscribe_vendor(request, vendor_id):
+    """Subscribe the current user to a vendor. Creates Subscription if missing or re-activates it."""
+    vendor = get_object_or_404(Vendor, pk=vendor_id)
+    sub, created = Subscription.objects.get_or_create(vendor=vendor, user=request.user)
+    if not sub.is_active:
+        sub.is_active = True
+        sub.save()
+    # redirect back to referring page or vendor/home
+    return redirect(request.META.get('HTTP_REFERER') or 'market:index')
+
+
+@login_required
+def unsubscribe_vendor(request, vendor_id):
+    """Deactivate an existing subscription if present."""
+    vendor = get_object_or_404(Vendor, pk=vendor_id)
+    try:
+        sub = Subscription.objects.get(vendor=vendor, user=request.user)
+        sub.is_active = False
+        sub.save()
+    except Subscription.DoesNotExist:
+        pass
+    return redirect(request.META.get('HTTP_REFERER') or 'market:index')
 
 
 # def login(request):
