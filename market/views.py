@@ -8,6 +8,7 @@ from .serializers import (
 )
 from django.shortcuts import render, redirect 
 from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
 from item.models import Item, Category
 from .forms import SignUpForm
 
@@ -90,6 +91,16 @@ def unsubscribe_vendor(request, vendor_id):
     except Subscription.DoesNotExist:
         pass
     return redirect(request.META.get('HTTP_REFERER') or 'market:index')
+
+
+def logout_view(request):
+    """Log out the current user and redirect to the site index.
+
+    Uses django.contrib.auth.logout which flushes the session. This ensures
+    the session is cleared and the user becomes anonymous on the next request.
+    """
+    logout(request)
+    return redirect('market:index')
 
 
 # def login(request):

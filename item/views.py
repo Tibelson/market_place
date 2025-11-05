@@ -9,7 +9,17 @@ from .forms import ItemForm
 
 def detail(request, pk):
     item = get_object_or_404(Item, pk=pk)
-    context = {'item':item}
+    # Check subscription status for the current authenticated user
+    is_subscribed = False
+    try:
+        from market.models import Subscription
+        if request.user.is_authenticated:
+            is_subscribed = Subscription.objects.filter(vendor=item.owner, user=request.user, is_active=True).exists()
+    except Exception:
+        # If the Subscription model isn't available for any reason, default to False
+        is_subscribed = False
+
+    context = {'item': item, 'is_subscribed': is_subscribed}
 
     return render(request, 'item/detail.html',context )
 
