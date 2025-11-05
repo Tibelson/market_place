@@ -1,0 +1,32 @@
+{% extends 'market/base.html' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="mb-4">
+      <h2 class="text-xl font-semibold">Conversation about: {{ chat.item.name }}</h2>
+      <p class="text-sm text-gray-500">Participants: {% for u in chat.members.all %}{{ u.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    </div>
+
+    <div class="space-y-3 mb-4 max-h-96 overflow-y-auto p-3 bg-gray-50 rounded">
+      {% for msg in messages %}
+        <div class="p-3 rounded {% if msg.sender == request.user %}bg-teal-50 self-end{% else %}bg-white{% endif %}">
+          <div class="text-sm text-gray-700"><strong>{{ msg.sender.username }}</strong> <span class="text-xs text-gray-400">{{ msg.timestamp|date:'M d, H:i' }}</span></div>
+          <div class="mt-1">{{ msg.content }}</div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <form method="post" action="" class="space-y-2">
+      {% csrf_token %}
+      {{ form.content }}
+      <div class="flex items-center justify-between">
+        <button type="submit" class="px-4 py-2 bg-teal-600 text-white rounded">Send</button>
+        <a href="{% url 'messaging:chat_list' %}" class="text-sm text-gray-600">Back to chats</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
